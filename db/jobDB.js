@@ -1,6 +1,7 @@
 const jobModel          = require('../models/jobModel').vacancies;
 const jobAppliedModel   = require('../models/jobModel').vacancyApplied;
 const userModel         = require('../models/userModel');
+const mongoose          = require('mongoose');
 
 module.exports.addJob =(data)=>{
  return new Promise((resolve,reject)=>{
@@ -158,25 +159,5 @@ module.exports.showAllAppliedJob = (id)=>{
     });
 }
 
-module.exports.showAllApplications =(id)=>{
-    return new Promise((resolve,reject)=>{
-         try {
-             jobAppliedModel.find({"jobid":id},(err,data)=>{
-                 if(err){
-                     reject(err);
-                 }
-                 else if(data){
-                     resolve(data);
-                 } 
-                 else{
-                     reject({message:'no data found'}); 
-                 }
-             })
-         } catch (error) {
-             reject(error);
-         }
-    });
-}
-
-
 //--------------- xxxxxxxxxxxxxx  ---------------//
+

@@ -94,7 +94,7 @@ module.exports.companyRegister = (data)=>{
 module.exports.checkEmail = (email)=>{
     return new Promise((resolve,reject)=>{
            try {
-               userModel.findOne({'email':email},(err,data)=>{
+               userModel.findOne({'email':email,'status':'active'},(err,data)=>{
                if(err){
                    reject(err);
                }
@@ -102,7 +102,7 @@ module.exports.checkEmail = (email)=>{
                   resolve(data);
                }
                else{
-                  reject({message:"user is not registered"});
+                  reject({message:"user is blocked"});
                }
             });
            } catch (error) {
@@ -156,6 +156,22 @@ module.exports.userProfile = (id)=>{
     });
 }
 
+// module.exports.updateUserProfile = (udata,id)=>{
+//         return new Promise((resolve,reject)=>{
+//             try {
+//                  let profile = new userModel({
+//                     //   name: udata.name,
+//                     //  email: udata.email,
+//                     // phno  : udata.phno,
+//                     // resume
+//                  });
+//             } catch (error) {
+//                 reject(error);
+//             }
+//         }); 
+// }
+
+
 module.exports.showAllUsers =(page,perpage)=>{
          return new Promise((resolve,reject)=>{
              try {
@@ -202,8 +218,8 @@ module.exports.companyProfile =(id)=>{
 module.exports.updateStatus = (id)=>{
     return new Promise((resolve,reject)=>{
          try {
-              userModel.findOneAndUpdate({"-id":id,"status":"blocked"}
-              ,(err,dataa)=>{
+              userModel.findOneAndUpdate({"_id":id,"status":"active"},{$set:{"status":"blocked"}}
+             ,{new:true} ,(err,dataa)=>{
                      if(err){
                          reject(err);
                      }

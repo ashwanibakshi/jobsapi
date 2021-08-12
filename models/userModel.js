@@ -34,8 +34,7 @@ const userSchema = new mongoose.Schema({
             default:'active'
         },
         createdAt:{
-            type:Date,
-            default:Date.now()
+            type:Date
         },
         updatedAt:{
             type:Date

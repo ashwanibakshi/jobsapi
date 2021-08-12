@@ -1,5 +1,6 @@
 const express  = require('express');
 const userDb   = require('../db/userDB');
+const {upload,multerMidleware} = require('../middleware/multer');
 
 const router  = express.Router();
 
@@ -52,6 +53,11 @@ router.get('/profile/:id',(req,res)=>{
       })
 });
 
+// router.put('/profile',multerMidleware(upload),(req,res)=>{
+//      console.log(req.body,req.file);
+// });
+
+
 router.get('/showall/profile',(req,res)=>{
     let perpage=5,page=5;
     if(req.query.perpage!==null && req.query.perpage!==undefined){
@@ -77,6 +83,16 @@ router.get('/profile/company/:id',(req,res)=>{
          .catch((err)=>{
               res.json({error:err.message});
          })
+});
+
+router.put('/status/:id',(req,res)=>{     //update the user status
+     userDb.updateStatus(req.params.id)
+     .then((data)=>{
+         res.json({data:data,msg:"success"});
+     })  
+     .catch((err)=>{
+         res.json({error:err.message});
+     })   
 });
 
 module.exports = router;
