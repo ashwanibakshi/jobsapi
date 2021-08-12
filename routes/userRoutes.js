@@ -85,7 +85,7 @@ router.get('/profile/company/:id',(req,res)=>{
          })
 });
 
-router.put('/status/:id',(req,res)=>{     //update the user status
+router.put('/status/:id',(req,res)=>{     //update the status
      userDb.updateStatus(req.params.id)
      .then((data)=>{
          res.json({data:data,msg:"success"});
@@ -94,5 +94,6 @@ router.put('/status/:id',(req,res)=>{     //update the user status
          res.json({error:err.message});
      })   
 });
+
 
 module.exports = router;
