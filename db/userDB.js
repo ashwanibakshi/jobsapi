@@ -178,12 +178,23 @@ module.exports.showAllUsers =(page,perpage)=>{
                   var query = {};
                 query.limit = perpage;
                 query.skip  = (perpage*page)-perpage;
-              userModel.find({"role":"user"},{},query,(err,data)=>{
+              userModel.find({"role":"user"},{},query,(err,dataa)=>{
                    if(err){
                        reject(err);
                    }
-                   else if(data){
-                       resolve(data);
+                   else if(dataa.length){
+                userModel.find({"role":"user"}).count().exec((err,countData)=>{
+                        if(err){
+                            reject(err);
+                        }
+                        else{
+                            resolve({
+                                data:dataa,
+                             current:page,
+                               pages:Math.ceil(countData/perpage)
+                            });
+                        }
+                      });                   
                    }
                    else{
                        reject('no data found');
@@ -233,5 +244,39 @@ module.exports.updateStatus = (id)=>{
          } catch (error) {
              reject(error);
          }
+    });
+}
+
+module.exports.showAllCompanies =(perpage,page)=>{
+    return new Promise((resolve,reject)=>{
+         try {
+             let query={};
+             query.skip  = (perpage*page)-perpage;
+             query.limit = perpage;
+            userModel.find({"role":"company"},{},query,(err,dataa)=>{
+                 if(err){
+                     reject(err);
+                 }
+                 else if(dataa.length){
+             userModel.find({"role":"company"}).count().exec((err,countData)=>{
+                 if(err){
+                     reject(err);
+                 }
+                 else{
+                    resolve({
+                        data:dataa,
+                        current:page,
+                        pages:Math.ceil(countData/perpage)
+                      });
+                     }
+                  });             
+                 }
+                 else{
+                     reject({message:'no data found'});
+                 }
+            });    
+         } catch (error) {
+             reject(error);
+         }     
     });
 }

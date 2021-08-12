@@ -58,12 +58,12 @@ router.get('/profile/:id',(req,res)=>{
 // });
 
 
-router.get('/showall/profile',(req,res)=>{
-    let perpage=5,page=5;
+router.get('/showall',(req,res)=>{
+    let perpage=5,page=1;
     if(req.query.perpage!==null && req.query.perpage!==undefined){
       perpage = req.query.perpage;   
     }
-    if(req.query.page!==null && req.query.page!==null){
+    if(req.query.page!==null && req.query.page!==undefined){
         page = req.query.page;
     }
        userDb.showAllUsers(page,perpage)
@@ -74,6 +74,24 @@ router.get('/showall/profile',(req,res)=>{
            res.json({error:err.message});
        })
 });
+
+router.get('/company/showall',(req,res)=>{  //show all companies
+      let perpage=5,page=1;
+      if(req.query.perpage!==null && req.query.perpage!==undefined){
+        perpage = req.query.perpage;   
+      }
+      if(req.query.page!==null && req.query.page!==undefined){
+          page = req.query.page;
+      }
+      userDb.showAllCompanies(perpage,page)
+      .then((data)=>{
+           res.json({data:data,msg:"success"});
+      })
+      .catch((err)=>{
+           res.json({error:err.message});
+      })
+});
+
 
 router.get('/profile/company/:id',(req,res)=>{
          userDb.companyProfile(req.params.id)
