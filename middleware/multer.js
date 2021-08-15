@@ -27,7 +27,7 @@ const upload = multer({
     limits:{
         fileSize:1024*1024
     }
-}).single('pic');
+}).single('resume');
 
 
  const multerMidleware = function multerUploadMiddleware(uploads){

@@ -1,8 +1,11 @@
 const express  = require('express');
 const userDb   = require('../db/userDB');
 const {upload,multerMidleware} = require('../middleware/multer');
+const fs       = require('fs'); 
+const {uuid}   = require('uuidv4');
+const path     = require('path');
 
-const router  = express.Router();
+const router   = express.Router();
 
 
 /**
@@ -15,8 +18,10 @@ const router  = express.Router();
  * @apiParam {String} password    password
  *
  * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *
+{
+    "data": "user successfully registered",
+    "msg": "success"
+}
  */
 router.post('/register',(req,res)=>{
      userDb.userRegister(req.body)
@@ -38,8 +43,10 @@ router.post('/register',(req,res)=>{
  * @apiParam {String} password    password
  *
  * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *
+{
+    "data": "company successfully registered",
+    "msg": "success"
+}
  */
 router.post('/registercompany',(req,res)=>{
     userDb.companyRegister(req.body)
@@ -59,8 +66,10 @@ router.post('/registercompany',(req,res)=>{
  * @apiParam {String} password    password
  *
  * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *
+ {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxMTkxZjJiZDkwMTNmMGUyMDFjMDlkYyIsImVtYWlsIjoidTNAdS5jb20iLCJyb2xlIjoidXNlciIsImlhdCI6MTYyOTAzNjQ1NCwiZXhwIjoxNjI5NjQxMjU0fQ.hS4JtIphscsMxU5sYXp9QP2Wxc0aSa8guwJ-jCMoI1A",
+    "msg": "success"
+}
  */
 router.post('/login',(req,res)=>{
     userDb.checkEmail(req.body.email)
@@ -84,8 +93,19 @@ router.post('/login',(req,res)=>{
  * @apiGroup User
  * @apiParam {String} id       userid
  * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *
+{
+    "data": {
+        "resume": "/uploads/resumeda272463-2557-4396-a030-815b02e7bd94.docx",
+        "_id": "6119213ac7e550208ccf3c9a",
+        "name": "new  user4",
+        "email": "u4@u.com",
+        "createdAt": "2021-08-15T14:14:18.456Z",
+        "address": "address1",
+        "phno": 1234567890,
+        "updatedAt": "2021-08-15T14:46:54.562Z"
+    },
+    "msg": "success"
+}
  */
 router.get('/profile/:id',(req,res)=>{
       userDb.userProfile(req.params.id)
@@ -98,7 +118,7 @@ router.get('/profile/:id',(req,res)=>{
 });
 
 /**
- * @api {get} /user/profile/:id      Update_Profile
+ * @api {put} /user/profile     Update_Profile
  * @apiName  Update_Profile
  * 
  * @apiGroup User
@@ -109,10 +129,26 @@ router.get('/profile/:id',(req,res)=>{
  * @apiParam {String} resume    user new resume
  * @apiParam {String} address   user address
  * @apiParam {String} oldresume user oldresume_url
+ * @apiParam {String} id        user id
  * 
  * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *
+{
+    "data": {
+        "resume": "/uploads/resumeda272463-2557-4396-a030-815b02e7bd94.docx",
+        "status": "active",
+        "_id": "6119213ac7e550208ccf3c9a",
+        "name": "new  user4",
+        "email": "u4@u.com",
+        "password": "$2b$10$bw1p6CHyfIhF9/kAW2F7jO6G5Qsjgzns52JZCclxYbfnLrUY3BXlO",
+        "role": "user",
+        "createdAt": "2021-08-15T14:14:18.456Z",
+        "__v": 0,
+        "address": "address2",
+        "phno": 1234567890,
+        "updatedAt": "2021-08-15T14:46:54.562Z"
+    },
+    "msg": "success"
+}
  */
 router.put('/profile',multerMidleware(upload),(req,res)=>{
      let uprofile ;
@@ -138,9 +174,12 @@ router.put('/profile',multerMidleware(upload),(req,res)=>{
            }
        }
        else{
-        var rpth  = './public'+req.body.oldpic;
-        fs.unlinkSync(rpth);
-         var fname = getname();
+         if(req.body.oldresume!==null && req.body.oldresume!==undefined){
+          var rpth  = './public'+req.body.oldresume;
+          fs.unlinkSync(rpth);
+         }
+       
+         var fname = req.file.fieldname+uuid();
          let filepath = '/uploads/'+fname+path.extname(req.file.originalname);
           uprofile = {
             email: req.body.email,
@@ -152,7 +191,7 @@ router.put('/profile',multerMidleware(upload),(req,res)=>{
           }         
        }
     
-     userDb.updateUserProfile()
+     userDb.updateUserProfile(uprofile,req.body.id)
      .then((data)=>{
           res.json({data:data,msg:"success"});
      })
@@ -162,6 +201,38 @@ router.put('/profile',multerMidleware(upload),(req,res)=>{
 });
 
 
+/**
+ * @api {put} /user/showall     ShowAll_User
+ * @apiName  ShowAll_User
+ * 
+ * @apiGroup User
+ * 
+ * 
+ * @apiSuccessExample Success-Response:
+{
+    "data": {
+        "data": [
+            {
+                "resume": "/uploads/resumeda272463-2557-4396-a030-815b02e7bd94.docx",
+                "status": "active",
+                "_id": "6119213ac7e550208ccf3c9a",
+                "name": "new  user4",
+                "email": "u4@u.com",
+                "password": "$2b$10$bw1p6CHyfIhF9/kAW2F7jO6G5Qsjgzns52JZCclxYbfnLrUY3BXlO",
+                "role": "user",
+                "createdAt": "2021-08-15T14:14:18.456Z",
+                "__v": 0,
+                "address": "address1",
+                "phno": 1234567890,
+                "updatedAt": "2021-08-15T14:50:14.948Z"
+            }
+        ],
+        "current": "1",
+        "pages": 1
+    },
+    "msg": "success"
+}
+ */
 router.get('/showall',(req,res)=>{
     let perpage=5,page=1;
     if(req.query.perpage!==null && req.query.perpage!==undefined){
@@ -207,7 +278,35 @@ router.get('/profile/company/:id',(req,res)=>{
          })
 });
 
-router.put('/status/:id',(req,res)=>{     //update the status
+
+/**
+ * @api {put} /user/status/:id     UpdateStatus(user,company)
+ * @apiName  Update_Status
+ * 
+ * @apiGroup Status
+ * 
+ * @apiParam {String} id        user id
+ * 
+ * @apiSuccessExample Success-Response:
+{
+    "data": {
+        "resume": "/uploads/resumeda272463-2557-4396-a030-815b02e7bd94.docx",
+        "status": "blocked",
+        "_id": "6119213ac7e550208ccf3c9a",
+        "name": "new  user4",
+        "email": "u4@u.com",
+        "password": "$2b$10$bw1p6CHyfIhF9/kAW2F7jO6G5Qsjgzns52JZCclxYbfnLrUY3BXlO",
+        "role": "user",
+        "createdAt": "2021-08-15T14:14:18.456Z",
+        "__v": 0,
+        "address": "address1",
+        "phno": 1234567890,
+        "updatedAt": "2021-08-15T14:50:14.948Z"
+    },
+    "msg": "success"
+}
+ */
+router.put('/status/:id',(req,res)=>{     //update the status(user or company)
      userDb.updateStatus(req.params.id)
      .then((data)=>{
          res.json({data:data,msg:"success"});

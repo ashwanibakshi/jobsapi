@@ -18,13 +18,14 @@ module.exports.userRegister = (data)=>{
                                 userdata.name     = data.name,
                                 userdata.email    = data.email,
                                userdata.password  = data.password,
-                                    userdata.role = "user"      
+                                    userdata.role = "user",
+                               userdata.createdAt = Date.now()      
                                 userdata.save((err,sdata)=>{
                                     if(err){
                                         reject(err);
                                     }
                                     else if(sdata){
-                                        resolve(sdata);
+                                        resolve('user successfully registered');
                                     }
                                     else {
                                         reject({message:'data not saved'});
@@ -35,13 +36,14 @@ module.exports.userRegister = (data)=>{
                                 userdata.name     = "admin",
                                 userdata.email    = "admin@a.com",
                                userdata.password  = "admi@1234",
-                                    userdata.role = "admin"  
+                                    userdata.role = "admin", 
+                               userdata.createdAt = Date.now()      
                                 userdata.save((err,sdata)=>{
                                     if(err){
                                         reject(err);
                                     }
                                     else if(sdata){
-                                        resolve(sdata);
+                                        resolve('admin successfully registered');
                                     }
                                     else {
                                         reject({message:'data not saved'});
@@ -68,14 +70,15 @@ module.exports.companyRegister = (data)=>{
                            name  : data.name,
                            email : data.email,
                          password: data.password,
-                            role : "company"
+                            role : "company",
+                        createdAt: Date.now()
                        });
                        userdata.save((err,sdata)=>{
                            if(err){
                                reject(err);
                            }
                            else if(sdata){
-                               resolve(sdata);
+                             resolve('company successfully registered');
                            }
                            else {
                                reject({message:'data not saved'});
@@ -139,7 +142,9 @@ module.exports.comparePassword = (pass,dataa)=>{
 module.exports.userProfile = (id)=>{
     return new Promise((resolve,reject)=>{
         try {
-            userModel.findOne({'_id':id,'status':'active','role':'user'},(err,dataa)=>{
+            userModel.findOne({'_id':id,'status':'active','role':'user'},
+ {"_id":1,"name":1,"email":1,"resume":1,"createdAt":1,"updatedAt":1,"address":1,"phno":1},
+            (err,dataa)=>{
                 if(err){
                   reject(err);
                 }
@@ -159,12 +164,19 @@ module.exports.userProfile = (id)=>{
 module.exports.updateUserProfile = (udata,id)=>{
         return new Promise((resolve,reject)=>{
             try {
-                 let profile = new userModel({
-                      name: udata.name,
-                     email: udata.email,
-                    phno  : udata.phno,
-                    resume
-                 });
+
+        userModel.findOneAndUpdate({"_id":id},{$set:udata},{new:true},
+        (err,dataa)=>{
+            if(err){
+                reject(err);
+            }
+            else if(dataa){
+                resolve(dataa);
+            }
+            else{
+                reject({message:'data not updated'});
+            }
+        });
             } catch (error) {
                 reject(error);
             }
@@ -226,27 +238,6 @@ module.exports.companyProfile =(id)=>{
     });
 }
 
-module.exports.updateStatus = (id)=>{
-    return new Promise((resolve,reject)=>{
-         try {
-              userModel.findOneAndUpdate({"_id":id,"status":"active"},{$set:{"status":"blocked"}}
-             ,{new:true} ,(err,dataa)=>{
-                     if(err){
-                         reject(err);
-                     }
-                     else if(dataa){
-                         resolve(dataa);
-                     }
-                     else{
-                        reject({message:'no data updated'})
-                     }
-              }); 
-         } catch (error) {
-             reject(error);
-         }
-    });
-}
-
 module.exports.showAllCompanies =(perpage,page)=>{
     return new Promise((resolve,reject)=>{
          try {
@@ -278,5 +269,26 @@ module.exports.showAllCompanies =(perpage,page)=>{
          } catch (error) {
              reject(error);
          }     
+    });
+}
+
+module.exports.updateStatus = (id)=>{
+    return new Promise((resolve,reject)=>{
+         try {
+              userModel.findOneAndUpdate({"_id":id,"status":"active"},{$set:{"status":"blocked"}}
+             ,{new:true} ,(err,dataa)=>{
+                     if(err){
+                         reject(err);
+                     }
+                     else if(dataa){
+                         resolve(dataa);
+                     }
+                     else{
+                        reject({message:'no data updated'})
+                     }
+              }); 
+         } catch (error) {
+             reject(error);
+         }
     });
 }
