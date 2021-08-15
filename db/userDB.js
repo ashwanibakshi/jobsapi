@@ -156,20 +156,20 @@ module.exports.userProfile = (id)=>{
     });
 }
 
-// module.exports.updateUserProfile = (udata,id)=>{
-//         return new Promise((resolve,reject)=>{
-//             try {
-//                  let profile = new userModel({
-//                     //   name: udata.name,
-//                     //  email: udata.email,
-//                     // phno  : udata.phno,
-//                     // resume
-//                  });
-//             } catch (error) {
-//                 reject(error);
-//             }
-//         }); 
-// }
+module.exports.updateUserProfile = (udata,id)=>{
+        return new Promise((resolve,reject)=>{
+            try {
+                 let profile = new userModel({
+                      name: udata.name,
+                     email: udata.email,
+                    phno  : udata.phno,
+                    resume
+                 });
+            } catch (error) {
+                reject(error);
+            }
+        }); 
+}
 
 
 module.exports.showAllUsers =(page,perpage)=>{

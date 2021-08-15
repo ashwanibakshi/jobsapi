@@ -1,0 +1,7 @@
+{
+    "name": "JobApi",
+    "description": "Documentation",
+    "title": "Job Apis",
+    "url" : "http://localhost:3000/api/v1",
+    "sampleUrl": null
+  }

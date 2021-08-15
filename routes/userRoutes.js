@@ -5,7 +5,19 @@ const {upload,multerMidleware} = require('../middleware/multer');
 const router  = express.Router();
 
 
-
+/**
+ * @api {post} /user/register       Post_Register
+ * @apiName Post_Register
+ * @apiGroup User
+ *
+ * @apiParam {String} name        name
+ * @apiParam {String} email       email
+ * @apiParam {String} password    password
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *
+ */
 router.post('/register',(req,res)=>{
      userDb.userRegister(req.body)
      .then((data)=>{
@@ -16,6 +28,19 @@ router.post('/register',(req,res)=>{
      })
 });
 
+/**
+ * @api {post} /user/registercompany       Post_Register
+ * @apiName Post_Register
+ * @apiGroup Company
+ *
+ * @apiParam {String} name        name
+ * @apiParam {String} email       email
+ * @apiParam {String} password    password
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *
+ */
 router.post('/registercompany',(req,res)=>{
     userDb.companyRegister(req.body)
     .then((data)=>{
@@ -26,9 +51,18 @@ router.post('/registercompany',(req,res)=>{
     })
 });
 
-
+/**
+ * @api {post} /user/login       Post_Login
+ * @apiName  Post_Login
+ * @apiGroup Login
+ * @apiParam {String} email       email
+ * @apiParam {String} password    password
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *
+ */
 router.post('/login',(req,res)=>{
-    console.log('adad')
     userDb.checkEmail(req.body.email)
     .then((data)=>{
         console.log(data);
@@ -43,6 +77,16 @@ router.post('/login',(req,res)=>{
     })
 });
 
+
+/**
+ * @api {get} /user/profile/:id      Get_Profile
+ * @apiName  Get_Profile
+ * @apiGroup User
+ * @apiParam {String} id       userid
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *
+ */
 router.get('/profile/:id',(req,res)=>{
       userDb.userProfile(req.params.id)
       .then((data)=>{
@@ -53,9 +97,69 @@ router.get('/profile/:id',(req,res)=>{
       })
 });
 
-// router.put('/profile',multerMidleware(upload),(req,res)=>{
-//      console.log(req.body,req.file);
-// });
+/**
+ * @api {get} /user/profile/:id      Update_Profile
+ * @apiName  Update_Profile
+ * 
+ * @apiGroup User
+ * 
+ * @apiParam {String} name      user name
+ * @apiParam {String} email     user email
+ * @apiParam {String} phno      user phno
+ * @apiParam {String} resume    user new resume
+ * @apiParam {String} address   user address
+ * @apiParam {String} oldresume user oldresume_url
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *
+ */
+router.put('/profile',multerMidleware(upload),(req,res)=>{
+     let uprofile ;
+       if(req.file === undefined){
+           if(req.body.oldresume){  
+             uprofile = { 
+               name:req.body.name,
+               email: req.body.email,
+                phno: req.body.phno,
+              resume: req.body.oldresume,
+             address: req.body.address,
+           updatedAt: Date.now()
+             }
+           }
+           else{
+            uprofile = { 
+                 name: req.body.name,
+                email: req.body.email,
+                 phno: req.body.phno,
+              address: req.body.address,
+            updatedAt: Date.now()
+              } 
+           }
+       }
+       else{
+        var rpth  = './public'+req.body.oldpic;
+        fs.unlinkSync(rpth);
+         var fname = getname();
+         let filepath = '/uploads/'+fname+path.extname(req.file.originalname);
+          uprofile = {
+            email: req.body.email,
+             phno: req.body.phno,
+             name: req.body.name,
+          address: req.body.address,
+           resume: filepath,
+        updatedAt: Date.now()    
+          }         
+       }
+    
+     userDb.updateUserProfile()
+     .then((data)=>{
+          res.json({data:data,msg:"success"});
+     })
+     .catch((err)=>{
+           res.json({error:err.message});
+     })
+});
 
 
 router.get('/showall',(req,res)=>{

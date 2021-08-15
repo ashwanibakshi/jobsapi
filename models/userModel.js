@@ -24,7 +24,8 @@ const userSchema = new mongoose.Schema({
             
         },
         resume:{
-            type:String
+            type:String,
+            default:null
         },
         address:{
             type:String
