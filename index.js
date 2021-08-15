@@ -5,7 +5,7 @@ const path      = require('path');
 
 const app = express();
 
-mongoose.connect('mongodb://localhost:27017/jobs',{useNewUrlParser:true,useCreateIndex:true,useFindAndModify:true})
+mongoose.connect('mongodb://localhost:27017/jobs',{useNewUrlParser:true,useCreateIndex:true,useFindAndModify:true,useUnifiedTopology:true})
 .then(()=>{console.log('connected to db')})
 .catch((err)=>{console.log('connection err',err)})
 

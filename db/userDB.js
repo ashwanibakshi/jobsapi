@@ -244,7 +244,8 @@ module.exports.showAllCompanies =(perpage,page)=>{
              let query={};
              query.skip  = (perpage*page)-perpage;
              query.limit = perpage;
-            userModel.find({"role":"company"},{},query,(err,dataa)=>{
+            userModel.find({"role":"company"},
+{"_id":1,"name":1,"email":1,"phno":1,"password":1,"status":1,"createdAt":1,"updatedAt":1},query,(err,dataa)=>{
                  if(err){
                      reject(err);
                  }
@@ -270,6 +271,55 @@ module.exports.showAllCompanies =(perpage,page)=>{
              reject(error);
          }     
     });
+}
+
+
+module.exports.updateCompanyProfile = (udata,id)=>{
+    return new Promise((resolve,reject)=>{
+        try {
+    userModel.findOne({"phno":udata.phno,"_id":id},(err,fdata)=>{
+          if(err){
+              reject(err);
+          }
+          else if(fdata){  //check if the number already similar to the old one.
+              if(delete udata.phno){
+
+              } 
+          }
+          else {
+        userModel.findOne({"phno":udata.phno,"_id":id},(err,adata)=>{
+               if(err){
+                   reject(err);
+               } 
+               else if(adata){
+                  reject({"phno already in use by other user"});    
+               }
+               else{
+
+               } 
+        });
+              reject({message:"user"})
+          }
+    });
+        } catch (error) {
+            reject(error);
+        }
+    }); 
+}
+
+function upCompanyProfile(udata,id,cb){
+    userModel.findOneAndUpdate({"_id":id},{$set:udata},{new:true},
+    (err,dataa)=>{
+        if(err){
+            cb(err,null);
+        }
+        else if(dataa){
+            cb(null,dataa);
+        }
+        else{
+            cb("data not updated",null);
+           }
+        });
 }
 
 module.exports.updateStatus = (id)=>{
