@@ -3,6 +3,33 @@ const jobDb      = require('../db/jobDB');
 
 const router    = express.Router();
 
+
+/**
+ * @api {post} /job/add     add_job
+ * @apiName  add_job
+ * @apiGroup jobs
+ * 
+ * @apiParam {String} cid              companyid(_id)
+ * @apiParam {String} title            job title
+ * @apiParam {String} description      job description
+ * @apiParam {String} qualification    job qualification
+ * @apiParam {String} tags             tags  
+ * 
+ * @apiSuccessExample Success-Response:
+{
+    "data": {
+        "status": "active",
+        "_id": "611fe3c9f3270907649caddb",
+        "cid": "610919bf70bd2022749c8d5b",
+        "title": "js developer",
+        "description": "this is a javascript developer job.Having 1 or more year experience",
+        "qualification": "bca,btech,mca",
+        "tags": "javascript",
+        "__v": 0
+    },
+    "msg": "success"
+}
+ */
 router.post('/add',(req,res)=>{
      jobDb.addJob(req.body)
      .then((data)=>{

@@ -151,7 +151,7 @@ router.put('/profile',multerMidleware(upload),(req,res)=>{
 
 
 /**
-* @api {put} /user/showall     ShowAll_User
+* @api {get} /user/showall     ShowAll_User
 * @apiName  ShowAll_User
 * 
 * @apiGroup User
@@ -206,8 +206,8 @@ router.get('/showall',(req,res)=>{
 //--------------- company part start --------------//
 
 /**
- * @api {post} /user/registercompany       Post_Register
- * @apiName Post_Register
+ * @api {post} /user/registercompany       PostRegister
+ * @apiName PostRegister
  * @apiGroup Company
  *
  * @apiParam {String} name        name
@@ -230,6 +230,36 @@ router.post('/registercompany',(req,res)=>{
     })
 });
 
+/**
+ * @api {get} /user/company/showall       ShowAll_Companies
+ * @apiName showAll_Companies
+ * @apiGroup Company
+ *
+ * @apiSuccessExample Success-Response:
+{
+    "data": {
+        "data": [
+            {
+                "status": "active",
+                "_id": "61191ce13dd040171cf9bdfa",
+                "name": "new company1 ",
+                "email": "c1@c.com",
+                "password": "$2b$10$ibPfrLogCcTuHQfzQLcxke435oBv9qZGUY0O9aqrmrv0/JpHXlCjO"
+            },
+            {
+                "status": "blocked",
+                "_id": "61191e120f0d5c028434ac0e",
+                "name": "new company2 ",
+                "email": "c2@c.com",
+                "password": "$2b$10$BWgbq0dMydUuHh6K0SPa0.Xu7w7jVcQHiTgm8LkCqV7p5mKYnqmzO"
+            }
+        ],
+        "current": 1,
+        "pages": 1
+    },
+    "msg": "success"
+}
+ */
 router.get('/company/showall',(req,res)=>{  //show all companies
     let perpage=5,page=1;
     if(req.query.perpage!==null && req.query.perpage!==undefined){
@@ -240,7 +270,7 @@ router.get('/company/showall',(req,res)=>{  //show all companies
     }
     userDb.showAllCompanies(perpage,page)
     .then((data)=>{
-         res.json({data:data,msg:"success"});
+         res.json({data,msg:"success"});
     })
     .catch((err)=>{
          res.json({error:err.message});
@@ -248,7 +278,28 @@ router.get('/company/showall',(req,res)=>{  //show all companies
 });
 
 
-router.get('/profile/company/:id',(req,res)=>{
+/**
+ * @api {get} /user/company/profile/:id       Show_CompanyProfile
+ * @apiName Show_CompanyProfile
+ * @apiGroup Company
+ *
+ * @apiParam {String} id      companyid(_id).
+ * 
+ * 
+ * @apiSuccessExample Success-Response:
+{
+    "data": [
+        {
+            "_id": "610919bf70bd2022749c8d5b",
+            "name": "company 2",
+            "email": "company2@c.com",
+            "phno": 1234567890
+        }
+    ],
+    "msg": "success"
+}
+ */
+router.get('/company/profile/:id',(req,res)=>{
        userDb.companyProfile(req.params.id)
        .then((data)=>{
             res.json({data:data,msg:'success'});
@@ -258,24 +309,47 @@ router.get('/profile/company/:id',(req,res)=>{
        })
 });
 
-// router.put('/profile/company',(req,res)=>{
-//    let doc = { 
-//          name:req.body.name,
-//         email: req.body.email,
-//          phno: parseInt(req.body.phno),
-//        resume: req.body.oldresume,
-//       address: req.body.address,
-//       status : req.body.status,
-//     updatedAt: Date.now()
-//    }
-//    userDb.updateCompanyProfile(doc,req.body.id)
-//    .then((data)=>{ 
-//           res.json({data:data,msg:"success"});
-//    })
-//    .catch((err)=>{
-//           res.json({error:err.message});
-//    })
-// });
+
+/**
+ * @api {put} /user/company/profile/      Update_CompanyProfile
+ * @apiName  Update_CompanyProfile
+ * @apiGroup Company
+ *
+ * @apiParam {String} id          companyid(_id).
+ * @apiParam {String} name        name
+ * @apiParam {String} email       email
+ * @apiParam {String} password    address
+ * @apiParam {Number} phno        phno
+ * 
+ * @apiSuccessExample Success-Response:
+{
+    "data": {
+        "_id": "610919bf70bd2022749c8d5b",
+        "createdAt": "2021-08-03T10:23:47.341Z",
+        "name": "company 2",
+        "email": "company2@c.com",
+        "phno": 1234567891,
+        "updatedAt": "2021-08-20T17:00:29.665Z"
+    },
+    "msg": "success"
+}
+ */
+router.put('/company/profile/',(req,res)=>{
+   let doc = { 
+         name: req.body.name,
+        email: req.body.email,
+         phno: parseInt(req.body.phno),
+      address: req.body.address,
+    updatedAt: Date.now()
+   }
+   userDb.updateCompanyProfile(doc,req.body.id)
+   .then((data)=>{ 
+          res.json({data:data,msg:"success"});
+   })
+   .catch((err)=>{
+          res.json({error:err.message});
+   })
+});
 
 //--------------- company part ends --------------//
 

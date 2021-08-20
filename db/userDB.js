@@ -221,7 +221,7 @@ module.exports.showAllUsers =(page,perpage)=>{
 module.exports.companyProfile =(id)=>{
     return new Promise((resolve,reject)=>{
         try {
-            userModel.find({"_id":id,"status":"active","role":"company"},(err,dataa)=>{
+            userModel.find({"_id":id,"status":"active","role":"company"},{"_id":1,"name":1,"email":1,"phno":1,"address":1},(err,dataa)=>{
                   if(err){
                       reject(err);
                   }
@@ -281,26 +281,43 @@ module.exports.updateCompanyProfile = (udata,id)=>{
           if(err){
               reject(err);
           }
-          else if(fdata){  //check if the number already similar to the old one.
-              if(delete udata.phno){
-
-              } 
-          }
+          else if(fdata){        
+               upCompanyProfile(udata,id,(err,dataa)=>{
+                     if(err){
+                         reject(err);
+                     }
+                     else if(dataa){
+                         resolve(dataa)
+                     }
+                     else{
+                         reject({message:"data not updated"});
+                     }
+               });
+           }
           else {
-        userModel.findOne({"phno":udata.phno,"_id":id},(err,adata)=>{
-               if(err){
-                   reject(err);
-               } 
-               else if(adata){
-                  reject({"phno already in use by other user"});    
-               }
-               else{
-
-               } 
-        });
-              reject({message:"user"})
-          }
-    });
+               userModel.findOne({"phno":udata.phno},(err,dataa)=>{
+                   if(err){
+                       reject(err);
+                   }
+                   else if(dataa){
+                        reject({message:"phno already taken by other user"});
+                   }
+                   else{
+                    upCompanyProfile(udata,id,(err,dataa)=>{
+                        if(err){
+                            reject(err);
+                        }
+                        else if(dataa){
+                            resolve(dataa);
+                        }
+                        else{
+                            reject({message:"data not updated"});
+                        }
+                    });     
+                   }
+               });
+           }
+         });
         } catch (error) {
             reject(error);
         }
@@ -314,8 +331,15 @@ function upCompanyProfile(udata,id,cb){
             cb(err,null);
         }
         else if(dataa){
-            cb(null,dataa);
-        }
+            userModel.findOne({"_id":id},{"_id":1,"name":1,"email":1,"phno":1,"createdAt":1,"updatedAt":1},(err,cdata)=>{
+               if(err){
+                   cb(err,null);
+               }
+               else{
+                   cb(null,cdata);
+               }
+            });
+         }
         else{
             cb("data not updated",null);
            }
