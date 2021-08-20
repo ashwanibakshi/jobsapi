@@ -457,5 +457,101 @@
     "version": "0.0.0",
     "filename": "routes/jobsRoutes.js",
     "groupTitle": "jobs"
+  },
+  {
+    "type": "post",
+    "url": "/job/edit/:id",
+    "title": "edit_job",
+    "name": "edit_job",
+    "group": "jobs",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>jobid(_id)</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "{\n    \"data\": {\n        \"status\": \"active\",\n        \"_id\": \"611fe3c9f3270907649caddb\",\n        \"cid\": \"610919bf70bd2022749c8d5b\",\n        \"title\": \"js developer\",\n        \"description\": \"this is a javascript developer job. for a one year experience\",\n        \"qualification\": \"bca,btech,mca\",\n        \"tags\": \"javascript\",\n        \"__v\": 0\n    },\n    \"msg\": \"suceess\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "routes/jobsRoutes.js",
+    "groupTitle": "jobs"
+  },
+  {
+    "type": "post",
+    "url": "/job/remove/:id",
+    "title": "remove_job",
+    "name": "remove_job",
+    "group": "jobs",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>jobid(_id)</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "{\n    \"data\": {\n        \"status\": \"active\",\n        \"_id\": \"611fe3c9f3270907649caddb\",\n        \"cid\": \"610919bf70bd2022749c8d5b\",\n        \"title\": \"js developer\",\n        \"description\": \"this is a javascript developer job. for a one year experience\",\n        \"qualification\": \"bca,btech,mca\",\n        \"tags\": \"javascript\",\n        \"__v\": 0\n    },\n    \"msg\": \"suceess\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "routes/jobsRoutes.js",
+    "groupTitle": "jobs"
+  },
+  {
+    "type": "get",
+    "url": "/job/company/showall/:cid",
+    "title": "showAllCompany_Jobs",
+    "name": "showAllCompany_Jobs",
+    "group": "jobs",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "cid",
+            "description": "<p>companyid(_id)</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "{\n     \"data\": [\n         {\n             \"status\": \"active\",\n             \"_id\": \"610bf0c1d4f5b20304e1ff35\",\n             \"cid\": \"610919bf70bd2022749c8d5b\",\n             \"title\": \"need custom web site\",\n             \"description\": \"want a custom web site in php\",\n             \"qualification\": \"bca,mca\",\n             \"tags\": \"php,mysql\",\n             \"__v\": 0\n         },\n         {\n             \"status\": \"active\",\n             \"_id\": \"611fe3c9f3270907649caddb\",\n             \"cid\": \"610919bf70bd2022749c8d5b\",\n             \"title\": \"js developer\",\n             \"description\": \"this is a javascript developer job. for a one year experience\",\n             \"qualification\": \"bca,btech,mca\",\n             \"tags\": \"javascript\",\n             \"__v\": 0\n         }\n     ],\n     \"msg\": \"success\"\n }",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "routes/jobsRoutes.js",
+    "groupTitle": "jobs"
   }
 ]
