@@ -68,7 +68,7 @@ module.exports.deleteJob = (id)=>{
                          reject(err);
                      }
                      else if(data){
-                         resolve(data);
+                         resolve("job successfully removed");
                      }
                      else{
                          reject({message:'data not deleted'});

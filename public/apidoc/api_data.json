@@ -513,7 +513,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "{\n    \"data\": {\n        \"status\": \"active\",\n        \"_id\": \"611fe3c9f3270907649caddb\",\n        \"cid\": \"610919bf70bd2022749c8d5b\",\n        \"title\": \"js developer\",\n        \"description\": \"this is a javascript developer job. for a one year experience\",\n        \"qualification\": \"bca,btech,mca\",\n        \"tags\": \"javascript\",\n        \"__v\": 0\n    },\n    \"msg\": \"suceess\"\n}",
+          "content": "{\n    \"data\": \"job successfully removed\",\n    \"msg\": \"success\"\n}",
           "type": "json"
         }
       ]

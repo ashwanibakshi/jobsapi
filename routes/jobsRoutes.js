@@ -82,17 +82,8 @@ router.get('/edit/:id',(req,res)=>{
  * 
  * @apiSuccessExample Success-Response:
 {
-    "data": {
-        "status": "active",
-        "_id": "611fe3c9f3270907649caddb",
-        "cid": "610919bf70bd2022749c8d5b",
-        "title": "js developer",
-        "description": "this is a javascript developer job. for a one year experience",
-        "qualification": "bca,btech,mca",
-        "tags": "javascript",
-        "__v": 0
-    },
-    "msg": "suceess"
+    "data": "job successfully removed",
+    "msg": "success"
 }
  */
 router.delete('/remove/:id',(req,res)=>{
