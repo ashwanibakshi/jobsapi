@@ -1,6 +1,7 @@
 const jobModel          = require('../models/jobModel').vacancies;
 const jobAppliedModel   = require('../models/jobModel').vacancyApplied;
 const userModel         = require('../models/userModel');
+
 const mongoose          = require('mongoose');
 
 module.exports.addJob =(data)=>{
@@ -99,6 +100,46 @@ module.exports.showCompanyJobs =(cid)=>{
        }
    });
 }
+
+// module.exports.showAllJobApplication=(cid)=>{
+//  return new Promise((resolve,reject)=>{
+//        try {
+//         jobModel.aggregate([
+//             {
+//                 $match:{
+//                     "cid": mongoose.Types.ObjectId(cid)
+//                 }
+//             },
+//             {
+//                 $lookup : {
+//                     from  : "vacancieapplieds",
+//                 localField: "_id",
+//               foreignField: "jobid",
+//               as:"jobsapplied"
+//                 }
+//             },
+//             {$unwind:"$jobsapplied"},
+//             {
+//                 $project:{
+//                     count:{$sum:1}
+//                 }
+//             }
+//         ],(err,dataa)=>{
+//             if(err){
+//                 reject(err);
+//             }
+//             else if(dataa){
+//                resolve(dataa);
+//             }
+//             else{
+//                 reject({message:"not data found"});
+//             }
+//         });
+//        } catch (error) {
+//            reject(error);
+//        }
+//   });
+// }
 
 //--------------- company part ends --------------//
 

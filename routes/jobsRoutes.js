@@ -7,7 +7,7 @@ const router    = express.Router();
 /**
  * @api {post} /job/add     add_job
  * @apiName  add_job
- * @apiGroup jobs
+ * @apiGroup Jobs
  * 
  * @apiParam {String} cid              companyid(_id)
  * @apiParam {String} title            job title
@@ -44,7 +44,7 @@ router.post('/add',(req,res)=>{
 /**
  * @api {post} /job/edit/:id     edit_job
  * @apiName  edit_job
- * @apiGroup jobs
+ * @apiGroup Jobs
  * 
  * @apiParam {String} id              jobid(_id)
  * 
@@ -76,7 +76,7 @@ router.get('/edit/:id',(req,res)=>{
 /**
  * @api {post} /job/remove/:id     remove_job
  * @apiName  remove_job
- * @apiGroup jobs
+ * @apiGroup Jobs
  * 
  * @apiParam {String} id              jobid(_id)
  * 
@@ -100,7 +100,7 @@ router.delete('/remove/:id',(req,res)=>{
 /**
  * @api {get} /job/company/showall/:cid     showAllCompany_Jobs
  * @apiName  showAllCompany_Jobs
- * @apiGroup jobs
+ * @apiGroup Jobs
  * 
  * @apiParam {String} cid              companyid(_id)
  * 
@@ -141,6 +141,27 @@ router.get('/company/showall/:cid',(req,res)=>{
        })
 });
 
+/**
+ * @api {post} /job/company/showall/:cid     ApplyFor_Job
+ * @apiName  ApplyFor_Job
+ * @apiGroup Jobs
+ * 
+ * @apiParam {String} uid              userid
+ * @apiParam {String} jobid            jobid
+ * 
+ * @apiSuccessExample Success-Response:
+{
+    "data": {
+        "appliedon": "2021-08-21T03:53:00.058Z",
+        "status": "active",
+        "_id": "61207e4413d51319a4fec81d",
+        "uid": "6119213ac7e550208ccf3c9a",
+        "jobid": "61207da113d51319a4fec81a",
+        "__v": 0
+    },
+    "msg": "success"
+}
+ */
 router.post('/apply',(req,res)=>{
      jobDb.applyForJob(req.body)
      .then((data)=>{
@@ -151,7 +172,30 @@ router.post('/apply',(req,res)=>{
      })
 });
 
-router.get('/applied/showall/:id',(req,res)=>{ //all jobs applied by user
+
+/**
+ * @api {get} /job/applied/showall/:id          AppliedFor_Jobs
+ * @apiName AppliedFor_Jobs
+ * @apiGroup Jobs
+ * 
+ * @apiParam {String} id              userid
+ * 
+ * @apiSuccessExample Success-Response:
+{
+    "data": [
+        {
+            "appliedon": "2021-08-21T03:53:00.058Z",
+            "status": "active",
+            "_id": "61207e4413d51319a4fec81d",
+            "uid": "6119213ac7e550208ccf3c9a",
+            "jobid": "61207da113d51319a4fec81a",
+            "__v": 0
+        }
+    ],
+    "msg": "success"
+}
+ */
+router.get('/applied/showall/:id',(req,res)=>{       //all jobs applied by user
         jobDb.showAllAppliedJob(req.params.id)
         .then((data)=>{
             res.json({data:data,msg:"success"});
@@ -160,17 +204,6 @@ router.get('/applied/showall/:id',(req,res)=>{ //all jobs applied by user
             res.json({error:err.message});
         })
 });
-
-router.get('/showallapplication/:id',(req,res)=>{  //shows all the application came for the job
-      jobDb.showAllApplications(req.params.id)
-      .then((data)=>{
-          res.json({data:data,msg:'success'});   
-      })
-      .catch((err)=>{
-           res.json({error:err.message});
-      })
-});
-
 
 
 
